@@ -51,9 +51,16 @@ exports.register = async (req, res) => {
 
   const newUser = new User({ name, email, password: hashedPassword });
   const savedUser = await newUser.save().catch((err) => {
-    console.log("Error: ", err);
-    res.status(500).json({ error: "Cannot register user at the moment!" });
+    res.status(500).json({ message: "Cannot register user at the moment!" });
   });
 
   if (savedUser) res.json({ message: "Thanks for registering" });
+};
+
+exports.users = async (req, res) => {
+  const users = await User.findAll({}).catch((err) => {
+    console.log("Error: ", err);
+  });
+
+  res.json({ message: "Thanks for registering", data: users });
 };
