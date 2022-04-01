@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 
-exports.login = async (req, res) => {
+exports.login = async (req, res, next) => {
   const { email, password } = req.body;
 
   const userWithEmail = await User.findOne({ where: { email } }).catch(
@@ -29,38 +29,47 @@ exports.login = async (req, res) => {
         .json({ message: "Email or password does not match!" });
     }
   } catch (err) {
-    console.log(err);
-    res.status(500).send();
+    next(err);
   }
 };
 
-exports.register = async (req, res) => {
-  const { name, email, password } = req.body;
+exports.register = async (req, res, next) => {
+  try {
+    const { name, email, password } = req.body;
 
-  const alreadyExistsUser = await User.findOne({ where: { email } }).catch(
-    (err) => {
-      console.log("Error: ", err);
+    const alreadyExistsUser = await User.findOne({ where: { email } }).catch(
+      (err) => {
+        console.log("Error: ", err);
+      }
+    );
+
+    if (alreadyExistsUser) {
+      return res
+        .status(409)
+        .json({ message: "User with email already exists!" });
     }
-  );
 
-  if (alreadyExistsUser) {
-    return res.status(409).json({ message: "User with email already exists!" });
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = new User({ name, email, password: hashedPassword });
+    const savedUser = await newUser.save().catch((err) => {
+      res.status(500).json({ message: "Cannot register user at the moment!" });
+    });
+
+    if (savedUser) res.json({ message: "Thanks for registering" });
+  } catch (error) {
+    next(error);
   }
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  const newUser = new User({ name, email, password: hashedPassword });
-  const savedUser = await newUser.save().catch((err) => {
-    res.status(500).json({ message: "Cannot register user at the moment!" });
-  });
-
-  if (savedUser) res.json({ message: "Thanks for registering" });
 };
 
-exports.users = async (req, res) => {
-  const users = await User.findAll({}).catch((err) => {
-    console.log("Error: ", err);
-  });
+exports.users = async (req, res, next) => {
+  try {
+    const users = await User.findAll({}).catch((err) => {
+      console.log("Error: ", err);
+    });
 
-  res.json({ message: "Thanks for registering", data: users });
+    res.json({ message: "Thanks for registering", data: users });
+  } catch (error) {
+    next(error);
+  }
 };
