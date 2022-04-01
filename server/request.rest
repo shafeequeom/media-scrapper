@@ -1,0 +1,17 @@
+GET http://localhost:8000/users
+
+###
+
+POST http://localhost:8000/api/register Content-Type: application/json
+
+{
+"name": "Shafeeque", "password": "password", "email": "shafeequeom7@gmail.com"
+}
+
+###
+
+POST http://localhost:8000/api/login Content-Type: application/json
+
+{
+"password": "password", "email": "shafeequeom7@gmail.com"
+}
