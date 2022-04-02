@@ -1,26 +1,17 @@
 const express = require("express");
-const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const errorHandler = require("./middlewares/error-handler");
 const fs = require("fs");
-const path = require("path");
+const httpLogger = require("./middlewares/log-handler");
 require("dotenv").config();
 
 //app
 const app = express();
 
-//middleware
-const accessLogStream = fs.createWriteStream(
-  path.join(__dirname, "logs/access.log"),
-  {
-    flags: "a",
-  }
-);
-
 // setup the logger
-app.use(morgan("combined", { stream: accessLogStream }));
-// app.use(morgan("dev"));
+app.use(httpLogger);
+
 app.use(bodyParser.json({ limit: "2mb" }));
 app.use(cors());
 

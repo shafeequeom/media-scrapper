@@ -64,7 +64,7 @@ exports.register = async (req, res, next) => {
 
 exports.users = async (req, res, next) => {
   try {
-    const users = await User.findAll({}).catch((err) => {
+    const users = await User.findAll({ dfd }).catch((err) => {
       console.log("Error: ", err);
     });
 
