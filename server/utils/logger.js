@@ -4,7 +4,7 @@ const options = {
   accessFile: {
     level: "info",
     filename: "./logs/access.log",
-    handleExceptions: true,
+    handleExceptions: false,
     json: true,
     maxsize: 5242880, // 5MB
     maxFiles: 5,

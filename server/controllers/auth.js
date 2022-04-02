@@ -61,15 +61,3 @@ exports.register = async (req, res, next) => {
     next(error);
   }
 };
-
-exports.users = async (req, res, next) => {
-  try {
-    const users = await User.findAll({ dfd }).catch((err) => {
-      console.log("Error: ", err);
-    });
-
-    res.json({ message: "Thanks for registering", data: users });
-  } catch (error) {
-    next(error);
-  }
-};

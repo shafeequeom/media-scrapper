@@ -9,15 +9,14 @@ const errorHandler = (err, req, res, next) => {
   } else {
     // custom application error
     const errorMessage = "Error:- " + err.message;
-    const { method, url, body, contentLength, header } = req;
+    const { method, url, body } = req;
     const details = JSON.stringify(err, Object.getOwnPropertyNames(err));
     logger.error(errorMessage, {
+      details,
       timestamp: new Date().toString(),
       method,
       url,
       body,
-      header,
-      details,
     });
     return res.status(500).json({ message: "Internal server error" });
   }

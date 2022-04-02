@@ -1,15 +1,13 @@
 const express = require("express");
 
 //Controllers
-const { login, register, users } = require("../controllers/auth");
+const { scrapData } = require("../controllers/scrap");
 
 //Middleware
 const authorize = require("../middlewares/auth");
 
 const router = express.Router();
 
-router.post("/login", login);
-router.post("/register", register);
-router.get("/users", authorize, users);
+router.get("/scrap", authorize, scrapData);
 
 module.exports = router;
