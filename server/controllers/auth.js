@@ -5,11 +5,11 @@ const jwt = require("jsonwebtoken");
 exports.login = async (req, res, next) => {
   const { email, password } = req.body;
 
-  const userWithEmail = await User.findOne({ where: { email } }).catch(
-    (err) => {
+  const userWithEmail = await User.scope("withPassword")
+    .findOne({ where: { email } })
+    .catch((err) => {
       console.log("Error: ", err);
-    }
-  );
+    });
   console.log(userWithEmail.email);
 
   if (!userWithEmail)

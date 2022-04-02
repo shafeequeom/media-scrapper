@@ -31,7 +31,7 @@ const User = sequelize.define(
       attributes: { exclude: ["password"] },
     },
     scopes: {
-      withHash: { attributes: {} },
+      withPassword: { attributes: {} },
     },
   }
 );
