@@ -10,7 +10,6 @@ exports.login = async (req, res, next) => {
     .catch((err) => {
       console.log("Error: ", err);
     });
-  console.log(userWithEmail.email);
 
   if (!userWithEmail)
     return res
