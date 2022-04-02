@@ -4,19 +4,6 @@ const Scrap = require("../models/scrap");
 exports.scrapData = async (req, res, next) => {
   try {
     const { urls } = req.body;
-    // let requestPromises = urls.map((url) => requestUrlData(url));
-    // await Promise.all(requestPromises)
-    //   .then((res) => {
-    //     res.forEach((data) => {
-    //       let html = data;
-    //       console.log(html);
-    //       //   let url = data.url;
-    //       //   parseHtmlData(html, url);
-    //     });
-    //   })
-    //   .catch((error) => {
-    //     next(error);
-    //   });
 
     let allData = [];
 
@@ -53,6 +40,29 @@ exports.scrapData = async (req, res, next) => {
   }
 };
 
+exports.getTotalCount = async (req, res, next) => {
+  try {
+    let count = await Scrap.count({});
+    res.json({ message: "Total records", data: count });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getPagination = async (req, res, next) => {
+  try {
+    const limit = req.query.perPage || 10;
+    const page = req.params.page;
+    const offset = (page - 1) * limit;
+
+    let count = await Scrap.findAll({ offset, limit });
+    res.json({ message: "Scrap records", data: count });
+  } catch (error) {
+    next(error);
+  }
+};
+
+//******************* Kept for later reference **********************/
 const requestUrlData = (url) => {
   return new Promise((resolve, reject) => {
     axios
