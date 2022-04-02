@@ -1,11 +1,9 @@
 const logger = require("../utils/logger");
 
 const errorHandler = (err, req, res, next) => {
-  if (typeof err === "string") {
+  if (err && err.message.toLowerCase().endsWith("not found")) {
     // custom not found error
-    const is404 = err.toLowerCase().endsWith("not found");
-    const statusCode = is404 ? 404 : 400;
-    return res.status(statusCode).json({ message: err });
+    return res.status(404).json({ message: err.message });
   } else {
     // custom application error
     const errorMessage = "Error:- " + err.message;
