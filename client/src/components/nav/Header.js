@@ -82,7 +82,7 @@ const ResponsiveAppBar = () => {
             component="div"
             sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
           >
-            LOGO
+            SCRAPPER
           </Typography>
 
           <Box sx={{ flexGrow: 0 }}>

@@ -8,7 +8,7 @@ exports.login = async (req, res, next) => {
   const userWithEmail = await User.scope("withPassword")
     .findOne({ where: { email } })
     .catch((err) => {
-      console.log("Error: ", err);
+      next(err);
     });
 
   if (!userWithEmail)
@@ -38,7 +38,7 @@ exports.register = async (req, res, next) => {
 
     const alreadyExistsUser = await User.findOne({ where: { email } }).catch(
       (err) => {
-        console.log("Error: ", err);
+        next(err);
       }
     );
 
@@ -52,10 +52,24 @@ exports.register = async (req, res, next) => {
 
     const newUser = new User({ name, email, password: hashedPassword });
     const savedUser = await newUser.save().catch((err) => {
-      res.status(500).json({ message: "Cannot register user at the moment!" });
+      next(err);
     });
 
     if (savedUser) res.json({ message: "Thanks for registering" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.currentUser = async (req, res, next) => {
+  try {
+    const currentUser = await User.findByPk(req.user.id).catch((err) => {
+      next(err);
+    });
+    if (currentUser) {
+      currentUser.token = req.user.token;
+      res.json({ message: "Thanks for registering", data: currentUser });
+    }
   } catch (error) {
     next(error);
   }
