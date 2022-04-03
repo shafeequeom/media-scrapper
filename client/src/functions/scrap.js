@@ -6,7 +6,7 @@ export const getTotal = async () => {
 
 export const getScrapPagination = async (page, perPage, type, search) => {
   let url = `?perPage=${perPage}`;
-  if (type != "all") {
+  if (type !== "all") {
     url += `&type=${type}`;
   }
   if (search) {

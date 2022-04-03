@@ -29,7 +29,7 @@ function App() {
     if (isLoggedIn && !user.name) {
       currentUser()
         .then((res) => {
-          if (res.status == 200) {
+          if (res.status === 200) {
             const data = res.data.data;
             dispatch({
               type: "LOGGED_IN_USER",

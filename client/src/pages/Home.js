@@ -16,7 +16,7 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
-import { Pagination } from "@mui/material";
+import { Box, Pagination } from "@mui/material";
 
 const Home = () => {
   const [medias, setMedias] = useState([]);
@@ -36,7 +36,7 @@ const Home = () => {
 
   const getScrapedMedias = () => {
     getScrapPagination(page, perPage, type, search).then((res) => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         setMedias(res.data.data);
       }
     });
@@ -44,7 +44,7 @@ const Home = () => {
 
   const getTotalPages = () => {
     getTotal().then((res) => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         let total = Math.ceil(res.data.data / perPage);
         setTotal(total);
       }
@@ -89,50 +89,58 @@ const Home = () => {
 
   return (
     <Container sx={{ py: 8 }}>
-      <Grid
-        container
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
-        sx={{ mb: 4 }}
+      <Box
+        sx={{
+          backgroundColor: "#fff",
+          p: 2,
+          mb: 4,
+          borderRadius: "4px;",
+        }}
       >
-        <Grid item xs={12} sm={4} md={3}>
-          <FormControl fullWidth>
-            <InputLabel id="type-label">Type</InputLabel>
-            <Select
-              labelId="type-label"
-              id="type"
-              value={type}
-              label="Age"
-              onChange={handleTypeChange}
-            >
-              <MenuItem value="all">All</MenuItem>
-              <MenuItem value="image">Images</MenuItem>
-              <MenuItem value="video">Video</MenuItem>
-            </Select>
-          </FormControl>
+        <Grid
+          container
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <Grid item xs={12} sm={4} md={3}>
+            <FormControl fullWidth>
+              <InputLabel id="type-label">Type</InputLabel>
+              <Select
+                labelId="type-label"
+                id="type"
+                value={type}
+                label="Age"
+                onChange={handleTypeChange}
+              >
+                <MenuItem value="all">All</MenuItem>
+                <MenuItem value="image">Images</MenuItem>
+                <MenuItem value="video">Video</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={3} md={4}>
+            <FormControl fullWidth variant="outlined">
+              <InputLabel htmlFor="Search">Search</InputLabel>
+              <OutlinedInput
+                id="search"
+                type="search"
+                value={search}
+                onChange={handleSearch}
+                onKeyDown={handleSearchDebounce}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton edge="end">
+                      <SearchIcon />
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="Search"
+              />
+            </FormControl>
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={3} md={4}>
-          <FormControl fullWidth variant="outlined">
-            <InputLabel htmlFor="Search">Search</InputLabel>
-            <OutlinedInput
-              id="search"
-              type="search"
-              value={search}
-              onChange={handleSearch}
-              onKeyDown={handleSearchDebounce}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton edge="end">
-                    <SearchIcon />
-                  </IconButton>
-                </InputAdornment>
-              }
-              label="Search"
-            />
-          </FormControl>
-        </Grid>
-      </Grid>
+      </Box>
 
       <Grid container spacing={4}>
         {medias.map((media) => (

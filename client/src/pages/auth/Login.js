@@ -41,7 +41,7 @@ const Login = () => {
     };
 
     login(form).then((res) => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         const data = res.data.data;
         localStorage.setItem("token", data.token);
 

@@ -1,7 +1,7 @@
-import React from "react";
+import { Container } from "@mui/material";
 
 const Scrap = () => {
-  return <div>Scrap</div>;
+  return <Container></Container>;
 };
 
 export default Scrap;

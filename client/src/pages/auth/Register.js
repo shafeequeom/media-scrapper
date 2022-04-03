@@ -24,7 +24,7 @@ const Register = () => {
       name: data.get("name"),
     };
     register(form).then((res) => {
-      if (res.status == 200) {
+      if (res.status === 200) {
         setTimeout(() => {
           navigate("/login");
         }, 1000);
