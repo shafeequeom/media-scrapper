@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, useRoutes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Navigate,
+  useNavigate,
+  useRoutes,
+} from "react-router-dom";
 import { useEffect } from "react";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
@@ -15,25 +20,38 @@ const theme = createTheme();
 
 function App() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { user } = useSelector((state) => ({ ...state }));
   const isLoggedIn = user && user.token;
 
   useEffect(() => {
-    if (user && !user.name) {
+    if (isLoggedIn && !user.name) {
       currentUser()
         .then((res) => {
-          dispatch({
-            type: "LOGGED_IN_USER",
-            payload: {
-              name: res.data.name,
-              email: res.data.email,
-              token: user.token,
-              id: res.data.id,
-            },
-          });
+          if (res.status == 200) {
+            const data = res.data.data;
+            dispatch({
+              type: "LOGGED_IN_USER",
+              payload: {
+                name: data.name,
+                email: data.email,
+                token: user.token,
+                id: data.id,
+              },
+            });
+            navigate("/");
+          }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log(err);
+          localStorage.removeItem("token");
+          dispatch({
+            type: "LOGOUT",
+            payload: null,
+          });
+          navigate("/login");
+        });
     }
   }, [dispatch]);
 

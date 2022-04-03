@@ -42,13 +42,16 @@ const Login = () => {
 
     login(form).then((res) => {
       if (res.status == 200) {
+        const data = res.data.data;
+        localStorage.setItem("token", data.token);
+
         dispatch({
           type: "LOGGED_IN_USER",
           payload: {
-            name: res.data.name,
-            email: res.data.email,
-            token: user.token,
-            id: res.data.id,
+            name: data.name,
+            email: data.email,
+            token: data.token,
+            id: data.id,
           },
         });
         setTimeout(() => {

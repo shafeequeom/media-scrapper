@@ -21,7 +21,13 @@ exports.login = async (req, res, next) => {
         { id: userWithEmail.id, email: userWithEmail.email },
         process.env.JWT_SECRET
       );
-      res.json({ message: "Welcome Back!", token: jwtToken });
+      let response = {
+        name: userWithEmail.name,
+        id: userWithEmail.id,
+        email: userWithEmail.email,
+        token: jwtToken,
+      };
+      res.json({ message: "Welcome Back!", data: response });
     } else {
       return res
         .status(400)
