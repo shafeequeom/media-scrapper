@@ -16,5 +16,5 @@ export const getScrapPagination = async (page, perPage, type, search) => {
 };
 
 export const scrapMedia = async (urls) => {
-  return await axios.post(`scraps`, { urls });
+  return await axios.post(`scrap`, { urls });
 };
