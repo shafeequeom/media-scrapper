@@ -51,7 +51,7 @@ exports.getTotalCount = async (req, res, next) => {
 
 exports.getPagination = async (req, res, next) => {
   try {
-    const limit = req.query.perPage || 10;
+    const limit = parseInt(req.query.perPage) || 10;
     const page = req.params.page;
     const offset = (page - 1) * limit;
 

@@ -49,6 +49,7 @@ const Header = () => {
             variant="h6"
             component="div"
             sx={{ flexGrow: 1 }}
+            style={{ cursor: "pointer" }}
           >
             SCRAPPER
           </Typography>
