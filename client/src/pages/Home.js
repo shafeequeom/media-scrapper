@@ -38,10 +38,10 @@ const Home = () => {
     <Container sx={{ py: 8 }}>
       <Grid
         container
-        spacing={4}
         direction="row"
         justifyContent="space-between"
         alignItems="center"
+        sx={{ mb: 4 }}
       >
         <Grid item xs={12} sm={4} md={3}>
           <FormControl fullWidth>
@@ -60,14 +60,8 @@ const Home = () => {
           </FormControl>
         </Grid>
         <Grid item xs={12} sm={3} md={4}>
-          <FormControl
-            sx={{ m: 1, width: "25ch" }}
-            fullWidth
-            variant="outlined"
-          >
-            <InputLabel htmlFor="outlined-adornment-password">
-              Password
-            </InputLabel>
+          <FormControl fullWidth variant="outlined">
+            <InputLabel htmlFor="Search">Search</InputLabel>
             <OutlinedInput
               id="search"
               type="search"
@@ -80,18 +74,25 @@ const Home = () => {
                   </IconButton>
                 </InputAdornment>
               }
-              label="Password"
+              label="Search"
             />
           </FormControl>
         </Grid>
       </Grid>
+
       <Grid container spacing={4}>
         {medias.map((media) => (
           <Grid item key={media.id} xs={12} sm={6} md={4}>
             <Card
               sx={{ height: "100%", display: "flex", flexDirection: "column" }}
             >
-              <CardMedia component="img" image={media.url} alt="random" />
+              <CardMedia
+                component="img"
+                height={140}
+                image={media.url}
+                alt="random"
+                style={{ objectFit: "cover" }}
+              />
               <CardContent sx={{ flexGrow: 1 }}>
                 <Typography gutterBottom variant="h5" component="h2">
                   {media.fileName}
