@@ -3,16 +3,15 @@ import { useEffect } from "react";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
 import rootReducer from "./store";
-
 import routes from "./router";
-
 import { useDispatch, useSelector } from "react-redux";
 import { currentUser } from "./functions/auth";
-
 import "./App.css";
 import Header from "./components/nav/Header";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const store = createStore(rootReducer);
+const theme = createTheme();
 
 function App() {
   const dispatch = useDispatch();
@@ -45,8 +44,10 @@ const AppWrapper = () => {
   return (
     <Provider store={store}>
       <Router>
-        <Header></Header>
-        <App />
+        <ThemeProvider theme={theme}>
+          <Header></Header>
+          <App />
+        </ThemeProvider>
       </Router>
     </Provider>
   );

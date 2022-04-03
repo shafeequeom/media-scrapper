@@ -1,11 +1,11 @@
 import axios from "../utils/request";
 
-export const login = async () => {
-  return await axios.post("login");
+export const login = async (form) => {
+  return await axios.post("login", form);
 };
 
-export const register = async () => {
-  return await axios.post("register", {});
+export const register = async (form) => {
+  return await axios.post("register", form);
 };
 
 export const currentUser = async () => {
