@@ -4,6 +4,7 @@ import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
 import Home from "../pages/Home";
 import Profile from "../pages/Profile";
+import Scrap from "../pages/Scrap";
 
 const routes = (isLoggedIn) => [
   //Auth
@@ -14,6 +15,10 @@ const routes = (isLoggedIn) => [
   {
     path: "/profile",
     element: isLoggedIn ? <Profile /> : <Redirection />,
+  },
+  {
+    path: "/scrap",
+    element: isLoggedIn ? <Scrap /> : <Redirection />,
   },
   { path: "/login", element: <Login /> },
   { path: "/register", element: <Register /> },

@@ -16,8 +16,9 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
-import { Box, Pagination } from "@mui/material";
-
+import { Box, Fab, Pagination } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import { useNavigate } from "react-router-dom";
 const Home = () => {
   const [medias, setMedias] = useState([]);
   const [page, setPage] = useState(1);
@@ -25,6 +26,7 @@ const Home = () => {
   const [search, setSearch] = useState("");
   const [total, setTotal] = useState(1);
   const [perPage, setPerPage] = useState(12);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getScrapedMedias();
@@ -89,6 +91,10 @@ const Home = () => {
 
   return (
     <Container sx={{ py: 8 }}>
+      <Fab variant="extended" onClick={() => navigate("/scrap")}>
+        <AddIcon sx={{ mr: 1, right: 0 }} />
+        Scrap Media
+      </Fab>
       <Box
         sx={{
           backgroundColor: "#fff",
@@ -176,11 +182,10 @@ const Home = () => {
         sx={{ mt: 4 }}
       >
         <Pagination
-          color="secondary"
+          color="primary"
           count={total}
           page={page}
           onChange={handlePageChange}
-          variant="outlined"
         />
       </Grid>
     </Container>
