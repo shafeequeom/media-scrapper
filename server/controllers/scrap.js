@@ -117,15 +117,24 @@ exports.scrapData = async (data, io, socket) => {
         });
       });
 
-      const videoData = videos.map((url) => {
-        let filename = url.split("/").pop();
-        return {
-          fileType: "video",
-          fileName: filename,
-          fileUrl: url,
-          urlID: data.id,
-        };
+      const source = await page.$$eval("source", (vid) => {
+        return vid.map((x) => {
+          return x.src;
+        });
       });
+
+      let allVideos = [...videos, ...source];
+      const videoData = allVideos
+        .filter((item) => item)
+        .map((url) => {
+          let filename = url.split("/").pop();
+          return {
+            fileType: "video",
+            fileName: filename,
+            fileUrl: url,
+            urlID: data.id,
+          };
+        });
 
       if (videoData.length) await ScrapMedia.bulkCreate(videoData);
 
