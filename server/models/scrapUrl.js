@@ -1,22 +1,7 @@
 const sequelize = require("../utils/db");
 const { DataTypes } = require("sequelize");
 
-const Scrap = sequelize.define("scraps", {
-  fileName: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    validate: {
-      notEmpty: true,
-    },
-  },
-  fileType: {
-    type: DataTypes.ENUM("video", "image"),
-    allowNull: false,
-    defaultValue: "image",
-    validate: {
-      notEmpty: true,
-    },
-  },
+const ScrapUrl = sequelize.define("scrap_urls", {
   url: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -24,7 +9,15 @@ const Scrap = sequelize.define("scraps", {
       notEmpty: true,
     },
   },
-  parsedBy: {
+  status: {
+    type: DataTypes.SMALLINT,
+    allowNull: false,
+    defaultValue: 0,
+    validate: {
+      notEmpty: true,
+    },
+  },
+  userID: {
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
@@ -33,4 +26,4 @@ const Scrap = sequelize.define("scraps", {
   },
 });
 
-module.exports = Scrap;
+module.exports = ScrapUrl;

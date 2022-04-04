@@ -13,6 +13,7 @@ import { login } from "../../functions/auth";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -40,25 +41,34 @@ const Login = () => {
       password: data.get("password"),
     };
 
-    login(form).then((res) => {
-      if (res.status === 200) {
-        const data = res.data.data;
-        localStorage.setItem("token", data.token);
+    login(form)
+      .then((res) => {
+        if (res.status === 200) {
+          const data = res.data.data;
+          toast.success(`Welcome ${data.name}! Happy scraping..`);
+          localStorage.setItem("token", data.token);
 
-        dispatch({
-          type: "LOGGED_IN_USER",
-          payload: {
-            name: data.name,
-            email: data.email,
-            token: data.token,
-            id: data.id,
-          },
-        });
-        setTimeout(() => {
-          navigate("/");
-        }, 1000);
-      }
-    });
+          dispatch({
+            type: "LOGGED_IN_USER",
+            payload: {
+              name: data.name,
+              email: data.email,
+              token: data.token,
+              id: data.id,
+            },
+          });
+          setTimeout(() => {
+            navigate("/");
+          }, 1000);
+        }
+      })
+      .catch((err) => {
+        let message =
+          err && err.response
+            ? err.response.data.message
+            : "Unknown error occurred";
+        toast.error(message);
+      });
   };
 
   return (

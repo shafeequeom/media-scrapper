@@ -1,6 +1,5 @@
 import {
   BrowserRouter as Router,
-  Navigate,
   useNavigate,
   useRoutes,
 } from "react-router-dom";
@@ -14,6 +13,8 @@ import { currentUser } from "./functions/auth";
 import "./App.css";
 import Header from "./components/nav/Header";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const store = createStore(rootReducer);
 const theme = createTheme();
@@ -65,6 +66,7 @@ const AppWrapper = () => {
         <ThemeProvider theme={theme}>
           <Header></Header>
           <App />
+          <ToastContainer />
         </ThemeProvider>
       </Router>
     </Provider>

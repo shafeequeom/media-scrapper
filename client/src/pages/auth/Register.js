@@ -11,6 +11,7 @@ import Container from "@mui/material/Container";
 import { register } from "../../functions/auth";
 import Copyright from "../../components/footer/Copyright";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -23,13 +24,22 @@ const Register = () => {
       password: data.get("password"),
       name: data.get("name"),
     };
-    register(form).then((res) => {
-      if (res.status === 200) {
-        setTimeout(() => {
-          navigate("/login");
-        }, 1000);
-      }
-    });
+    register(form)
+      .then((res) => {
+        if (res.status === 200) {
+          toast.success(`Registration completed! Please login`);
+          setTimeout(() => {
+            navigate("/login");
+          }, 1000);
+        }
+      })
+      .catch((err) => {
+        let message =
+          err && err.response
+            ? err.response.data.message
+            : "Unknown error occurred";
+        toast.error(message);
+      });
   };
 
   return (
