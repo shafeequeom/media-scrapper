@@ -27,10 +27,7 @@ const Scrap = () => {
   const navigate = useNavigate();
   const { user } = useSelector((state) => ({ ...state }));
   const [connection, setConnection] = useState(false);
-  const [urls, setUrls] = useState([
-    "http://somstack.com",
-    "https://www.google.com",
-  ]);
+  const [urls, setUrls] = useState([""]);
   const [mediaUrl, setMediaUrl] = useState([]);
 
   const handleSubmit = async (e) => {
@@ -189,7 +186,7 @@ const Scrap = () => {
       </Box>
       {checkScrapProcessStatus() && (
         <Box sx={{ display: "flex", justifyContent: "space-around" }}>
-          <Button size="large" onClick={addNewRow}>
+          <Button size="large" onClick={() => navigate("/")}>
             Process Completed!! Goto Home
           </Button>
         </Box>

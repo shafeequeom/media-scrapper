@@ -20,7 +20,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
   transports: ["polling", "websocket"],
   cors: {
-    origin: "http://localhost:3000",
+    origin: `http://localhost:${process.env.FRONTEND_PORT || 3000}`,
     methods: ["GET", "POST"],
   },
 });

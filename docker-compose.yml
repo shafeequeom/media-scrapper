@@ -1,11 +1,13 @@
 version: "3.8"
 
-x-common-variables: &common-variables
+x-common-variables:
+  &common-variables
   MYSQL_USER: scrapper
   MYSQL_PASSWORD: 12345
   MYSQL_DATABASE: scrappy
   MYSQL_PORT: 3306
   REACT_APP_API_ADDRESS: http://localhost:8000
+  FRONTEND_PORT: 3000
   JWT_SECRET: 6867791c0dde7f13ee986df9e8a69ddae53070c60972c6744605884fa65f4a972a797638e80455c74
 
 services:

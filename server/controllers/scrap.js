@@ -32,6 +32,7 @@ exports.storeScrapUrls = async (req, res, next) => {
 
 exports.getTotalMediaCount = async (req, res, next) => {
   try {
+    //Conditions
     let where = {};
     if (req.query.type) {
       where.fileType = req.query.type;
@@ -54,6 +55,7 @@ exports.getMediaPagination = async (req, res, next) => {
     const page = req.params.page;
     const offset = (page - 1) * limit;
 
+    //Conditions
     let where = {};
     if (req.query.type) {
       where.fileType = req.query.type;
@@ -74,12 +76,13 @@ exports.getMediaPagination = async (req, res, next) => {
 
 exports.scrapData = async (data, io, socket) => {
   try {
-    let allData = [];
-
+    //Socket emit to
     io.to(socket.id).emit("started", data);
+    //Locking record
     await ScrapUrl.update({ status: 99 }, { where: { id: data.id } });
     let status = 2;
     if (isValidHttpUrl(data.url)) {
+      //Launch puppeteer headless browser
       const browser = await puppeteer.launch({
         headless: true,
         args: ["--no-sandbox", "--disable-setuid-sandbox"],
@@ -87,13 +90,12 @@ exports.scrapData = async (data, io, socket) => {
       const page = await browser.newPage();
       await page.goto(data.url);
 
+      //Load images
       const photos = await page.$$eval("img", (imgs) => {
         return imgs.map((x) => x.src);
       });
 
-      console.log(photos);
-
-      const tableData = photos
+      const imageData = photos
         .filter((url) => checkImageURL(url))
         .map((url) => {
           let filename = url.split("/").pop();
@@ -104,9 +106,29 @@ exports.scrapData = async (data, io, socket) => {
             urlID: data.id,
           };
         });
-      allData.push(...tableData);
 
-      await ScrapMedia.bulkCreate(allData);
+      if (imageData.length) await ScrapMedia.bulkCreate(imageData);
+
+      const videos = await page.$$eval("video", (vid) => {
+        console.log(vid);
+        return vid.map((x) => {
+          console.log(x);
+          return x.src;
+        });
+      });
+
+      const videoData = videos.map((url) => {
+        let filename = url.split("/").pop();
+        return {
+          fileType: "video",
+          fileName: filename,
+          fileUrl: url,
+          urlID: data.id,
+        };
+      });
+
+      if (videoData.length) await ScrapMedia.bulkCreate(videoData);
+
       status = 1;
     }
 
