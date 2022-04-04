@@ -8,13 +8,16 @@ import Typography from "@mui/material/Typography";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
 const MediaCard = ({ media }) => {
+  const handleView = () => {
+    window.open(media.fileUrl, "_blank").focus();
+  };
   return (
     <Card
       variant="outlined"
       sx={{ height: "100%", display: "flex", flexDirection: "column" }}
     >
       <CardMedia
-        component="img"
+        component={media.fileType === "video" ? "video" : "img"}
         height={140}
         src={media.fileUrl}
         alt="random"
@@ -26,7 +29,7 @@ const MediaCard = ({ media }) => {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button endIcon={<VisibilityIcon />} size="small">
+        <Button endIcon={<VisibilityIcon />} size="small" onClick={handleView}>
           View
         </Button>
         {/* <Button endIcon={<DeleteIcon />} size="small">
