@@ -8,7 +8,8 @@ import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Avatar } from "@mui/material";
+import { Avatar, Button } from "@mui/material";
+import SendAndArchiveIcon from "@mui/icons-material/SendAndArchive";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -30,6 +31,11 @@ const Header = () => {
     navigate("/profile");
   };
 
+  const gotoScrapPage = (e) => {
+    e.preventDefault();
+    navigate("/scrap");
+  };
+
   const handleLogout = () => {
     handleClose();
     localStorage.removeItem("token");
@@ -42,7 +48,7 @@ const Header = () => {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar>
           <Typography
             onClick={() => navigate("/")}
@@ -55,6 +61,15 @@ const Header = () => {
           </Typography>
           {user && user.name && (
             <div>
+              <Button
+                sx={{ mr: 3 }}
+                variant="contained"
+                color="secondary"
+                onClick={gotoScrapPage}
+                endIcon={<SendAndArchiveIcon />}
+              >
+                Scrap Media
+              </Button>
               <IconButton
                 size="large"
                 aria-label="account of current user"

@@ -1,12 +1,14 @@
 import {
   Button,
   Container,
+  Divider,
   IconButton,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
   TextField,
+  Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { useEffect, useState } from "react";
@@ -41,6 +43,7 @@ const Scrap = () => {
       setTimeout(() => {
         scrapData(data, user.id);
       });
+      setConnection(false);
     }
   };
   const handleUrlChange = (e, index) => {
@@ -51,8 +54,11 @@ const Scrap = () => {
   };
 
   const addNewRow = () => {
-    let newUrl = [...urls, ""];
-    setUrls(newUrl);
+    let lastItem = urls[urls.length - 1];
+    if (lastItem) {
+      let newUrl = [...urls, ""];
+      setUrls(newUrl);
+    }
   };
 
   const joinRoom = () => {
@@ -65,14 +71,17 @@ const Scrap = () => {
     if (user && user.id && socket.connected) joinRoom();
   }, [user]);
 
+  //Scrap emitter function
   const scrapData = (data, user) => {
     socket.emit("scrap", { data, user });
   };
 
+  //Test connection
   const testData = () => {
     socket.emit("test", user.id);
   };
 
+  //Socket catch fxn for each url scrap completion
   const completedScraping = (data) => {
     if (mediaUrl.length == 0) return;
     let resultSet = [...mediaUrl];
@@ -81,6 +90,12 @@ const Scrap = () => {
       resultSet[itemIndex] = data;
       setMediaUrl(resultSet);
     }
+  };
+
+  const checkScrapProcessStatus = () => {
+    if (mediaUrl.length === 0) return false;
+    if (mediaUrl.filter((item) => item.status == 0).length === 0) return true;
+    return false;
   };
 
   const testConnection = (data) => {
@@ -94,12 +109,11 @@ const Scrap = () => {
   };
 
   useEffect(() => {
-    console.log(socket);
     emitFunction();
   }, [socket, mediaUrl]);
 
   return (
-    <Container>
+    <Container sx={{ mt: 8, height: "90vh" }}>
       <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
         {urls.map((url, index) => (
           <Box key={index}>
@@ -133,33 +147,53 @@ const Scrap = () => {
           Scrap Image & Videos
         </Button>
       </Box>
+      {!checkScrapProcessStatus() && !connection && mediaUrl.length ? (
+        <Box sx={{ p: 2, textAlign: "center" }}>
+          <Typography gutterBottom variant="body1">
+            Please don't reload or goto another page while scrapping is in
+            progress.
+          </Typography>
+        </Box>
+      ) : (
+        ""
+      )}
       <Box>
         <List>
           {mediaUrl.map((item) => (
-            <ListItem key={item.id}>
-              <ListItemText
-                primary={item.url}
-                secondary={
-                  item.status === 0
-                    ? "Scrapping under process "
-                    : item.status === 2
-                    ? "Invalid URL"
-                    : "Scraping completed"
-                }
-              />
-              <ListItemIcon>
-                {item.status === 0 ? (
-                  <CircularProgress />
-                ) : item.status === 1 ? (
-                  <DoneIcon />
-                ) : (
-                  <CloseIcon />
-                )}
-              </ListItemIcon>
-            </ListItem>
+            <div key={item.id}>
+              <ListItem>
+                <ListItemText
+                  primary={item.url}
+                  secondary={
+                    item.status === 0
+                      ? "Scrapping under process "
+                      : item.status === 2
+                      ? "Invalid URL"
+                      : "Scraping completed"
+                  }
+                />
+                <ListItemIcon>
+                  {item.status === 0 ? (
+                    <CircularProgress />
+                  ) : item.status === 1 ? (
+                    <DoneIcon />
+                  ) : (
+                    <CloseIcon />
+                  )}
+                </ListItemIcon>
+              </ListItem>
+              <Divider></Divider>
+            </div>
           ))}
         </List>
       </Box>
+      {checkScrapProcessStatus() && (
+        <Box sx={{ display: "flex", justifyContent: "space-around" }}>
+          <Button size="large" onClick={addNewRow}>
+            Process Completed!! Goto Home
+          </Button>
+        </Box>
+      )}
     </Container>
   );
 };

@@ -1,6 +1,8 @@
 const puppeteer = require("puppeteer");
 const ScrapMedia = require("../models/scrapMedia");
 const ScrapUrl = require("../models/scrapUrl");
+const Sequelize = require("sequelize");
+const Op = Sequelize.Op;
 
 exports.storeScrapUrls = async (req, res, next) => {
   try {
@@ -30,7 +32,16 @@ exports.storeScrapUrls = async (req, res, next) => {
 
 exports.getTotalMediaCount = async (req, res, next) => {
   try {
-    let count = await ScrapMedia.count({});
+    let where = {};
+    if (req.query.type) {
+      where.fileType = req.query.type;
+    }
+
+    if (req.query.search) {
+      let search = req.query.search;
+      where.fileName = { [Op.like]: `%${search}%` };
+    }
+    let count = await ScrapMedia.count({ where });
     res.json({ message: "Total records", data: count });
   } catch (error) {
     next(error);
@@ -43,7 +54,17 @@ exports.getMediaPagination = async (req, res, next) => {
     const page = req.params.page;
     const offset = (page - 1) * limit;
 
-    let count = await ScrapMedia.findAll({ offset, limit });
+    let where = {};
+    if (req.query.type) {
+      where.fileType = req.query.type;
+    }
+
+    if (req.query.search) {
+      let search = req.query.search;
+      where.fileName = { [Op.like]: `%${search}%` };
+    }
+
+    let count = await ScrapMedia.findAll({ offset, limit, where });
     res.json({ message: "Scrap records", data: count });
   } catch (error) {
     console.log(error);
