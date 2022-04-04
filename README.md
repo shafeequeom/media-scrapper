@@ -4,8 +4,8 @@ A scrapping tool using MERN Stack and Socket.io
 
 Note:-
 
-1. Design is inspired from Museum of the Future official website.
-2. Please wait until system detects your face on entry so that you have better detection chances on exit.
+1. While parse please don't reload or goto another page
+2. Make sure chromium/chrome system requirements are met to run puppeteer
 3. User google chrome for better performance
 
 # How to run locally
