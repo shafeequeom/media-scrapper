@@ -59,7 +59,10 @@ exports.scrapData = async (data, io, socket) => {
     await ScrapUrl.update({ status: 99 }, { where: { id: data.id } });
     let status = 2;
     if (isValidHttpUrl(data.url)) {
-      const browser = await puppeteer.launch();
+      const browser = await puppeteer.launch({
+        headless: true,
+        args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      });
       const page = await browser.newPage();
       await page.goto(data.url);
 
@@ -96,6 +99,7 @@ exports.scrapData = async (data, io, socket) => {
 
     return result;
   } catch (error) {
+    console.log(error);
     await ScrapUrl.update({ status: 2 }, { where: { id: data.id } });
     data.status = 2;
     io.to(socket.id).emit("completed", data);
