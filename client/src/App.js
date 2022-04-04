@@ -9,14 +9,16 @@ import { createStore } from "redux";
 import rootReducer from "./store";
 import routes from "./router";
 import { useDispatch, useSelector } from "react-redux";
+import { composeWithDevTools } from "redux-devtools-extension";
 import { currentUser } from "./functions/auth";
 import "./App.css";
 import Header from "./components/nav/Header";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Box } from "@mui/material";
 
-const store = createStore(rootReducer);
+const store = createStore(rootReducer, composeWithDevTools());
 const theme = createTheme();
 
 function App() {
@@ -65,7 +67,9 @@ const AppWrapper = () => {
       <Router>
         <ThemeProvider theme={theme}>
           <Header></Header>
-          <App />
+          <Box sx={{ backgroundColor: "#fff" }}>
+            <App />
+          </Box>
           <ToastContainer />
         </ThemeProvider>
       </Router>

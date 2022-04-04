@@ -157,7 +157,7 @@ const Home = () => {
               <CardMedia
                 component="img"
                 height={140}
-                image={media.url}
+                image={media.fileUrl}
                 alt="random"
                 style={{ objectFit: "cover" }}
               />

@@ -6,17 +6,21 @@ exports.storeScrapUrls = async (req, res, next) => {
   try {
     const { urls } = req.body;
 
-    const insertData = urls.map((url) => {
-      return {
-        url,
-        userID: req.user.id,
-        status: 0,
-      };
-    });
+    const insertData = urls
+      .filter((url) => url)
+      .map((url) => {
+        return {
+          url,
+          userID: req.user.id,
+          status: 0,
+        };
+      });
 
     await ScrapUrl.bulkCreate(insertData);
 
-    const data = await ScrapUrl.findAll({ userID: req.user.id, status: 0 });
+    const data = await ScrapUrl.findAll({
+      where: { userID: req.user.id, status: 0 },
+    });
 
     res.json({ message: "Scrapping completed", data: data });
   } catch (error) {
@@ -47,25 +51,70 @@ exports.getMediaPagination = async (req, res, next) => {
   }
 };
 
-const scrapData = async (url) => {
-  let allData = [];
+exports.scrapData = async (data, io, socket) => {
+  try {
+    let allData = [];
 
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-  await page.goto(url);
+    io.to(socket.id).emit("started", data);
+    await ScrapUrl.update({ status: 99 }, { where: { id: data.id } });
+    let status = 2;
+    if (isValidHttpUrl(data.url)) {
+      const browser = await puppeteer.launch();
+      const page = await browser.newPage();
+      await page.goto(data.url);
 
-  const photos = await page.$$eval("img", (imgs) => {
-    return imgs.map((x) => x.src);
-  });
-  const tableData = photos.map((url) => {
-    return {
-      fileType: "image",
-      fileName: "dfd",
-      url: url,
-      parsedBy: req.user.id,
-    };
-  });
-  allData.push(...tableData);
+      const photos = await page.$$eval("img", (imgs) => {
+        return imgs.map((x) => x.src);
+      });
 
-  await ScrapMedia.bulkCreate(allData);
+      console.log(photos);
+
+      const tableData = photos
+        .filter((url) => checkImageURL(url))
+        .map((url) => {
+          let filename = url.split("/").pop();
+          return {
+            fileType: "image",
+            fileName: filename,
+            fileUrl: url,
+            urlID: data.id,
+          };
+        });
+      allData.push(...tableData);
+
+      await ScrapMedia.bulkCreate(allData);
+      status = 1;
+    }
+
+    const result = await ScrapUrl.update(
+      { status },
+      { where: { id: data.id } }
+    );
+    data.status = status;
+
+    io.to(socket.id).emit("completed", data);
+
+    return result;
+  } catch (error) {
+    await ScrapUrl.update({ status: 2 }, { where: { id: data.id } });
+    data.status = 2;
+    io.to(socket.id).emit("completed", data);
+  }
+};
+
+const isValidHttpUrl = (string) => {
+  let url;
+
+  try {
+    url = new URL(string);
+  } catch (_) {
+    return false;
+  }
+
+  return url.protocol === "http:" || url.protocol === "https:";
+  // return false;
+};
+
+const checkImageURL = (url) => {
+  return url.match(/\.(jpeg|jpg|gif|png)$/) != null;
 };

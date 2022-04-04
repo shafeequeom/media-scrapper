@@ -10,7 +10,7 @@ const routes = (isLoggedIn) => [
   //Auth
   {
     path: "/",
-    element: isLoggedIn ? <Home /> : <Redirection />,
+    element: isLoggedIn ? <Home /> : <Login />,
   },
   {
     path: "/profile",

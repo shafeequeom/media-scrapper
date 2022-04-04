@@ -24,6 +24,13 @@ const ScrapMedia = sequelize.define("scrap_medias", {
       notEmpty: true,
     },
   },
+  urlID: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    validate: {
+      notEmpty: true,
+    },
+  },
 });
 
 module.exports = ScrapMedia;
