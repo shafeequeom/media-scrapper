@@ -16,7 +16,7 @@ import Header from "./components/nav/Header";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Box, Container } from "@mui/material";
+import { Box } from "@mui/material";
 
 const store = createStore(rootReducer, composeWithDevTools());
 const theme = createTheme();
